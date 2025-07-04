@@ -1,0 +1,26 @@
+# Build outputs
+/FlutterAPI/FlutterAPI/bin/
+/FlutterAPI/FlutterAPI/obj/
+
+# Config files
+appsettings.Development.json
+*.user
+*.suo
+
+# IDE
+/.vs/
+/.vscode/
+/FlutterAPI/.vs/
+
+# NuGet
+/packages/
+DesignTimeBuild/
+CopilotIndices/
+applicationhost.config
+
+# Logs
+*.log
+/logs/
+
+# Local development
+/FlutterAPI/FlutterAPI/Properties/launchSettings.json
