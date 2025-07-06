@@ -1,4 +1,5 @@
 using FlutterAPI.Data;
+using FlutterAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")) );
+
+builder.Services.AddScoped<InterfaceAuthService, AuthService>();
 
 var app = builder.Build();
 
