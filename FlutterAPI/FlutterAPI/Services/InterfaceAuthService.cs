@@ -5,8 +5,8 @@ namespace FlutterAPI.Services
 {
     public interface InterfaceAuthService
     {
-        Task<User?> RegisterAsync(UserDto userDto);
-        Task<string?> LoginAsync(UserDto userDto);
-       
+        Task<User?> RegisterAsync(RegisterDto userDto);
+        Task<TokenResponseDto?> LoginAsync(LogInDto userDto);
+        Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto userDto);
     }
 }

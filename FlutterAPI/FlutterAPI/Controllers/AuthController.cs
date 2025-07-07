@@ -1,6 +1,7 @@
 ﻿using FlutterAPI.Entities;
 using FlutterAPI.Models;
 using FlutterAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,10 @@ namespace FlutterAPI.Controllers
     public class AuthController(InterfaceAuthService authService) : ControllerBase
     {
 
-        
+
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto userDto)
+        public async Task<ActionResult<User>> Register(RegisterDto userDto)
         {
             var user = await authService.RegisterAsync(userDto);
             if (user == null)
@@ -32,17 +33,41 @@ namespace FlutterAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserDto userDto)
+        public async Task<ActionResult<TokenResponseDto>> Login(LogInDto userDto)
         {
-            var token  = await authService.LoginAsync(userDto);
-            if (string.IsNullOrEmpty(token))
+            var response = await authService.LoginAsync(userDto);
+            if (response == null)
             {
                 return Unauthorized("Invalid credentials.");
             }
-            return Ok(token);
-
+            return Ok(response);
         }
 
-      
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto userDto)
+        {
+            var response = await authService.RefreshTokenAsync(userDto);
+            if (response == null || response.RefreshToken == null || response.AccessToken == null)
+            {
+                return Unauthorized("Invalid refresh token.");
+            }
+            return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AuthenticatedOnlyEndpoint()
+        {
+            return Ok("You are authenticated!");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin")]
+        public IActionResult AdminOnlyEndpoint()
+        {
+            return Ok("You are an admin!");
+
+        }
     }
 }
