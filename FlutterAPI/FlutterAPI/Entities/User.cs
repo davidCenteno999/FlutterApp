@@ -17,5 +17,7 @@ namespace FlutterAPI.Entities
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
+        List<TaskInformation>? Tasks { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using FlutterAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlutterAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250709040528_TaskInformation")]
+    partial class TaskInformation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,21 +97,6 @@ namespace FlutterAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TaskInformationTaskType", b =>
-                {
-                    b.Property<Guid>("TaskTypesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TasksId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("TaskTypesId", "TasksId");
-
-                    b.HasIndex("TasksId");
-
-                    b.ToTable("TaskInformationTaskType");
-                });
-
             modelBuilder.Entity("FlutterAPI.Entities.TaskInformation", b =>
                 {
                     b.HasOne("FlutterAPI.Entities.User", "User")
@@ -118,21 +106,6 @@ namespace FlutterAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TaskInformationTaskType", b =>
-                {
-                    b.HasOne("FlutterAPI.Entities.TaskType", null)
-                        .WithMany()
-                        .HasForeignKey("TaskTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FlutterAPI.Entities.TaskInformation", null)
-                        .WithMany()
-                        .HasForeignKey("TasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
