@@ -34,6 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
 });
 
 builder.Services.AddScoped<InterfaceAuthService, AuthService>();
+builder.Services.AddScoped<InterfaceTaskInformationService, TaskInformationService>();
 
 var app = builder.Build();
 

@@ -8,6 +8,6 @@ namespace FlutterAPI.Models.TaskModel
         public string Description { get; set; } = string.Empty;
         public Guid UserId { get; set; }
 
-        public List<Guid>? TaskTypesIds { get; set; }
+        public List<string> TaskTypesName { get; set; } = new List<string>();
     }
 }

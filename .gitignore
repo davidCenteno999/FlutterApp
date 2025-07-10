@@ -2,6 +2,7 @@
 /FlutterAPI/FlutterAPI/bin/
 /FlutterAPI/FlutterAPI/obj/
 
+
 # Config files
 appsettings.Development.json
 *.user

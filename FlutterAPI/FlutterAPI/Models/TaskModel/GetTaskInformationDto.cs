@@ -10,11 +10,11 @@ namespace FlutterAPI.Models.TaskModel
 
         public string Description { get; set; } = string.Empty;
 
-        public Guid UserId { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
         // Puedes incluir solo los nombres de los tipos o el ID + nombre
-        
-        public List<TaskTypeDto>? ListTypeTask { get; set; }
+
+        public List<string>? ListTypeTask { get; set; }
 
     }
 }
