@@ -4,9 +4,11 @@
 
 
 # Config files
-appsettings.Development.json
+/FlutterAPI/FlutterAPI/appsettings.Development.json
+/FlutterAPI/FlutterAPI/appsettings.json
 *.user
 *.suo
+.env
 
 # IDE
 /.vs/
