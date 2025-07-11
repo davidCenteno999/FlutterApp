@@ -83,15 +83,54 @@ namespace FlutterAPI.Services
             return taskInformationDtos;
         }
 
-        public Task<GetTaskInformationDto?> GetTaskInformationByIdAsync(Guid id)
+        public async Task<GetTaskInformationDto?> GetTaskInformationByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            TaskInformation? taskInformation = await context.Tasks
+                .Include(t => t.User)
+                .Include(t => t.TaskTypes)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (taskInformation == null)
+            {
+                return null; // Task not found
+            }
+
+            return new GetTaskInformationDto
+            {
+                Id = taskInformation.Id,
+                Title = taskInformation.Title,
+                Description = taskInformation.Description,
+                UserName = taskInformation.User != null ? taskInformation.User.Username : "",
+                ListTypeTask = taskInformation.TaskTypes.Select(tt => tt.Name).ToList()
+            };
+
+
+
         }
 
-        public Task<List<GetTaskInformationDto>> GetTaskInformationByUserIdAsync(Guid userId)
+        public async Task<List<GetTaskInformationDto>> GetTaskInformationByUserIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            List<GetTaskInformationDto> taskInformationDtos = new List<GetTaskInformationDto>();
+
+            await context.Tasks
+                .Include(t => t.User)
+                .Include(t => t.TaskTypes)
+                .Where(t => t.UserId == userId )
+                .ForEachAsync(task =>
+                {
+                    taskInformationDtos.Add(new GetTaskInformationDto
+                    {
+                        Id = task.Id,
+                        Title = task.Title,
+                        Description = task.Description,
+                        UserName = task.User != null ? task.User.Username : "",
+                        ListTypeTask = task.TaskTypes.Select(tt => tt.Name).ToList()
+                    });
+                });
+
+            return taskInformationDtos;
         }
+
 
         public Task<bool> UpdateTaskInformationAsync(UpdateTaskInformationDto updateTaskInformationDto)
         {
