@@ -17,6 +17,16 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFlutterApp", policy =>
+    {
+        policy.WithOrigins(Environment.GetEnvironmentVariable("FRONTEND_URL"), Environment.GetEnvironmentVariable("FRONTEND_URL2"))
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
     ?? throw new Exception("DB_CONNECTION_STRING no está definida");
@@ -56,6 +66,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFlutterApp");
 
 app.UseAuthorization();
 
