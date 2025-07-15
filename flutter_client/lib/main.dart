@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:flutter_client/SplashScreen.dart';
 import 'package:flutter_client/authPages/loginPage.dart';
 import 'package:flutter_client/authPages/registerPage.dart';
-import 'package:flutter_client/navBar.dart'; // Import the Register page
+import 'package:flutter_client/navBar.dart';
+// Import the Register page
 
 
 void main() {
@@ -12,6 +12,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  
   
   // This widget is the root of your application.
   @override
@@ -25,9 +27,10 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home: MyHomePage(title: 'Flutter Demo Home Page'), // Use Navbar as the home widget
+      home: const SplashScreen(), // Use Navbar as the home widget
 
       routes: {
+        '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
         '/login': (context) => const Loginpage(),
         '/register': (context) => const Registerpage(),
       }, // Added routes for login and register

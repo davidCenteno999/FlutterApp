@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/services/AuthServices.dart';
 
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
@@ -15,6 +16,14 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 
 class _NavbarState extends State<Navbar> {
   
+  final AuthService _authService = AuthService();
+
+  void _logout() async {
+    
+    await _authService.logout();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,13 @@ class _NavbarState extends State<Navbar> {
           IconButton(onPressed: () {
             // Handle logout action
             Navigator.pushNamed(context, '/register');
-          }, icon: const Icon(Icons.add))
+          }, icon: const Icon(Icons.add)),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              _logout();
+            }
+          ),
         ],
       ),
 

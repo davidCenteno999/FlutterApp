@@ -130,7 +130,7 @@ namespace FlutterAPI.Services
             };
 
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
+                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("TOKEN")!));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
@@ -143,6 +143,21 @@ namespace FlutterAPI.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+        }
+
+        public async Task<UserDto?> GetUserDataAsync(Guid userId)
+        {
+            var user = await context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return null; // User not found
+            }
+            return new UserDto
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role
+            };
         }
 
        

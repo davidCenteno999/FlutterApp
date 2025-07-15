@@ -55,6 +55,18 @@ namespace FlutterAPI.Controllers
             return Ok(response);
         }
 
+        [HttpPost("user")]
+        public async Task<ActionResult<UserDto>> GetUserData(Guid userId)
+        {
+            var user = await authService.GetUserDataAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            return Ok(user);
+        }
+
+
         [Authorize]
         [HttpGet]
         public IActionResult AuthenticatedOnlyEndpoint()

@@ -15,11 +15,13 @@ class _RegisterpageState extends State<Registerpage> {
   final passwordCtrl = TextEditingController();
   final confirmPasswordCtrl = TextEditingController();
 
+  final AuthService _authService = AuthService();
+
    void register() async {
     if (passwordCtrl.text != confirmPasswordCtrl.text) {
        print("Passwords do not match");
     } else {
-      var response = await AuthService().register(
+      var response = await _authService.register(
         usernameCtrl.text,
         emailCtrl.text,
         passwordCtrl.text,

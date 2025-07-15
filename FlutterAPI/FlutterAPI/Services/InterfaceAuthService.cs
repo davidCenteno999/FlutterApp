@@ -8,5 +8,6 @@ namespace FlutterAPI.Services
         Task<User?> RegisterAsync(RegisterDto userDto);
         Task<TokenResponseDto?> LoginAsync(LogInDto userDto);
         Task<TokenResponseDto?> RefreshTokenAsync(RefreshTokenRequestDto userDto);
+        Task<UserDto?> GetUserDataAsync(Guid userId);
     }
 }

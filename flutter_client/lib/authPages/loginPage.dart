@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/models/dtos/LoginDto.dart';
 import 'package:flutter_client/navBar.dart';
+import 'package:flutter_client/services/AuthServices.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
+
+
 
   @override
   State<Loginpage> createState() => _LoginpageState();
 }
 
 class _LoginpageState extends State<Loginpage> {
+
+  final usernameCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
+
+  final AuthService _authService = AuthService();
+
+  Future<void> _handleLogin() async {
+
+    final LoginDto loginDto = LoginDto(
+      email: usernameCtrl.text,
+      password: passwordCtrl.text,
+    );
+
+    var response = await _authService.login(loginDto);
+    if (response == true) {
+      print("Login successful");
+      
+      
+    } else {
+      print("Login failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +66,7 @@ class _LoginpageState extends State<Loginpage> {
                   border: OutlineInputBorder(),
                   labelText: 'Email',
                 ),
+                controller: usernameCtrl,
               ),
               const SizedBox(height: 10),
               TextField(
@@ -47,6 +75,7 @@ class _LoginpageState extends State<Loginpage> {
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
+                controller: passwordCtrl,
               ),
               const SizedBox(height: 40),
               SizedBox(
@@ -54,7 +83,8 @@ class _LoginpageState extends State<Loginpage> {
                 height: 40, // Adjust the height as needed
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle login logic here
+                    _handleLogin();
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 214, 230, 226),
