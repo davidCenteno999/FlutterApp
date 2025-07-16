@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_client/models/dtos/TokenResponseDto.dart';
 import 'package:flutter_client/models/dtos/LoginDto.dart';
-
+import 'package:flutter_client/models/dtos/GetUserDto.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:convert';
@@ -9,20 +9,6 @@ import 'dart:convert';
 // DTOs (Data Transfer Objects)
 
 
-
-class User {
-  final String id;
-  final String email;
-  final String username;
-  final String role;
-
-  User({
-    required this.id,
-    required this.email,
-    required this.username,
-    required this.role,
-  });
-}
 
 
 
@@ -102,8 +88,9 @@ class AuthService {
     await _storage.write(key: _accessTokenKey, value: tokenResponse.accessToken);
     await _storage.write(key: _refreshTokenKey, value: tokenResponse.refreshToken);
     final decodedToken = JwtDecoder.decode(tokenResponse.accessToken);
-    final userId = decodedToken['id'];
+    final userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] as String;
     await _storage.write(key: _userId, value: userId);
+   
   }
 
   Future<String?> getAccessToken() async {
@@ -119,6 +106,7 @@ class AuthService {
   }
 
   Future<String?> refreshAccessToken() async {
+    print("Refreshing access token...");
     final refreshToken = await getRefreshToken();
     final userId = await getUserId();
     if (refreshToken == null) {
@@ -149,8 +137,10 @@ class AuthService {
     }
   }
 
-  Future<User?> getCurrentUser() async {
+  Future<GetUser?> getCurrentUser() async {
     final userId = await getUserId();
+    print(userId);
+    
     if (userId == null) {
       return null;
     }
@@ -167,8 +157,8 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final userJson = jsonDecode(response.body);
-        return User(
-          id: userJson['id'],
+        return GetUser(
+          
           email: userJson['email'],
           username: userJson['username'],
           role: userJson['role'],

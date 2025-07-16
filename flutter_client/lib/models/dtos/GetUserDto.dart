@@ -1,12 +1,12 @@
-class User{
+class GetUser{
   final String username;
   final String email;
   final String role;
 
-  User({required this.username, required this.email, required this.role});
+  GetUser({required this.username, required this.email, required this.role});
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory GetUser.fromJson(Map<String, dynamic> json) {
+    return GetUser(
       username: json['username'],
       email: json['email'],
       role: json['role'],

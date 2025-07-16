@@ -27,10 +27,9 @@ class _LoginpageState extends State<Loginpage> {
     );
 
     var response = await _authService.login(loginDto);
+    if (!mounted) return; 
     if (response == true) {
-      print("Login successful");
-      
-      
+      Navigator.pushNamed(context, '/home');
     } else {
       print("Login failed");
     }

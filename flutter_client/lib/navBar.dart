@@ -41,19 +41,36 @@ class _NavbarState extends State<Navbar> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, '/profile');
             },
           ),
           IconButton(onPressed: () {
             // Handle logout action
             Navigator.pushNamed(context, '/register');
           }, icon: const Icon(Icons.add)),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _logout();
+          
+          FutureBuilder(future: _authService.isLoggedIn(), 
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                width: 14,
+                height: 14,
+                
+              );
+            } else if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            } else if (snapshot.data == true) {
+              return IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () {
+                  _logout();
+                },
+              );
+            } else {
+              return Container(); // No logout button if not logged in
             }
-          ),
+          }),
+          
         ],
       ),
 
