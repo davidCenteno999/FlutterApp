@@ -34,6 +34,8 @@ namespace FlutterAPI.Services
                
                 Title = taskInformationDto.Title,
                 Description = taskInformationDto.Description,
+                ImageId = taskInformationDto.ImageId,
+                ImageUrl = taskInformationDto.ImageUrl,
                 TaskTypes = taskTypes,
                 UserId = taskInformationDto.UserId,
                 User = user
@@ -74,6 +76,7 @@ namespace FlutterAPI.Services
                         Id = task.Id,
                         Title = task.Title,
                         Description = task.Description,
+                        ImageUrl = task.ImageUrl,
                         UserName = task.User != null ? task.User.Username : "",
                         ListTypeTask = task.TaskTypes.Select(tt => tt.Name).ToList()
                     })
@@ -100,6 +103,7 @@ namespace FlutterAPI.Services
                 Id = taskInformation.Id,
                 Title = taskInformation.Title,
                 Description = taskInformation.Description,
+                ImageUrl = taskInformation.ImageUrl,
                 UserName = taskInformation.User != null ? taskInformation.User.Username : "",
                 ListTypeTask = taskInformation.TaskTypes.Select(tt => tt.Name).ToList()
             };
@@ -123,6 +127,7 @@ namespace FlutterAPI.Services
                         Id = task.Id,
                         Title = task.Title,
                         Description = task.Description,
+                        ImageUrl = task.ImageUrl,
                         UserName = task.User != null ? task.User.Username : "",
                         ListTypeTask = task.TaskTypes.Select(tt => tt.Name).ToList()
                     });

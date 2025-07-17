@@ -5,11 +5,14 @@ import 'package:flutter_client/authPages/profile.dart';
 import 'package:flutter_client/authPages/registerPage.dart';
 import 'package:flutter_client/navBar.dart';
 import 'package:flutter_client/services/AuthGuard.dart';
+import 'package:flutter_client/taskPages/createTask.dart';
 import 'package:flutter_client/taskPages/taskHome.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Import the Register page
 
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -38,6 +41,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const Registerpage(),
         '/profile': (context) => const Profile(),
         '/taskHome': (context) => const Taskhome(),
+        '/createTask': (context) => const Createtask()
+
       }, // Added routes for login and register
 
       // Removed 'const' from routes to match constructors

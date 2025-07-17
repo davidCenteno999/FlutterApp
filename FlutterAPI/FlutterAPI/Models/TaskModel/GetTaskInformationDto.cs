@@ -10,6 +10,8 @@ namespace FlutterAPI.Models.TaskModel
 
         public string Description { get; set; } = string.Empty;
 
+        public string ImageUrl { get; set; } = string.Empty;
+
         public string UserName { get; set; } = string.Empty;
 
         // Puedes incluir solo los nombres de los tipos o el ID + nombre

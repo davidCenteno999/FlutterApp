@@ -8,6 +8,10 @@
 
         public string Description { get; set; } = string.Empty;
 
+        public string ImageId { get; set; } = string.Empty;
+
+        public string ImageUrl { get; set; } = string.Empty;
+
         public ICollection<TaskType> TaskTypes { get; set; } = new List<TaskType>();
 
         public Guid UserId { get; set; }

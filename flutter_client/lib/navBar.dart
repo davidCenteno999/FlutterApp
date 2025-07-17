@@ -35,7 +35,7 @@ class _NavbarState extends State<Navbar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // Handle settings action
+              Navigator.pushNamed(context, '/createTask');
             },
           ),
           IconButton(
