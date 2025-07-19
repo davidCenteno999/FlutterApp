@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_client/models/taskDto/createTaskDto.dart';
 import 'package:flutter_client/models/taskTypeDto/getTaskTypeDto.dart';
 import 'package:flutter_client/navBar.dart';
+import 'package:flutter_client/services/AuthServices.dart';
 import 'package:flutter_client/services/taskServices.dart';
 import 'package:flutter_client/services/uploadImages.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Createtask extends StatefulWidget {
   const Createtask({super.key});
@@ -24,6 +27,8 @@ class _CreatetaskState extends State<Createtask> {
   final List<String> taskTypes = [];
   late final Size size = MediaQuery.of(context).size;
 
+  final AuthService _authService = AuthService();
+
   @override
   void initState() {
     super.initState();
@@ -31,12 +36,22 @@ class _CreatetaskState extends State<Createtask> {
   }
 
   @override
+  void dispose() {
+    titleCtrl.dispose();
+    descriptionCtrl.dispose();
+    imageIdCtrl.dispose();
+    imageUrlCtrl.dispose();
+    super.dispose();
+  }
+  
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Navbar(),
       body: Center(
         child: Container(
-          width: size.width * 0.9,
+          width: size.width * 0.7,
           height: size.height * 0.9,
           child: Card(
             elevation: 9,
@@ -56,25 +71,57 @@ class _CreatetaskState extends State<Createtask> {
                   TitleInput(controller: titleCtrl),
                   const SizedBox(height: 10),
                   DescriptionInput(controller: descriptionCtrl),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   ImageInput(controllerUrl: imageUrlCtrl, controllerId: imageIdCtrl),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Image Preview:',
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child:  Text(
+                    'Select Task Types',
+                    textAlign: TextAlign.left,
                     style: TextStyle(
-                      fontSize: 9,
-                      
-                    )
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 209, 219, 219),
                     ),
-                  if (imageUrlCtrl.text.isNotEmpty) 
-                    Image.network(
-                      imageUrlCtrl.text,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  const SizedBox(height: 10),
+                  ),),
                   TaskTypeInput(controller: taskTypes),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      
+                     final userId = await _authService.getUserId();
+                      if (userId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('User not logged in')),
+                        );
+                        return;
+                      }
+                      final task = Createtaskdto(
+                        title: titleCtrl.text,
+                        description: descriptionCtrl.text,
+                        imageId: imageIdCtrl.text,
+                        imageUrl: imageUrlCtrl.text,
+                        userId: userId.toString(),
+                        taskType: taskTypes,
+                      );
+                      
+                      print(task.toJson());
+                      final success = await Taskservices().createTask(task);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Task created successfully')),
+                        );
+                        dispose(); // Clear the form after successful creation
+                        Navigator.pushNamed(context, '/home');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to create task')),
+                        );
+                      }
+                    },
+                    child: Text('Create Task'),
+                  ),
                 ],
               ),
             ),
@@ -167,7 +214,7 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  File? imageFile;
+  XFile? imageFile;
   final UploadImage _uploadImage = UploadImage();
 
   @override
@@ -179,7 +226,8 @@ class _ImageInputState extends State<ImageInput> {
           color: const Color.fromARGB(255, 209, 219, 219),
         ),
         const SizedBox(width: 10),
-        Expanded(
+         Flexible(
+          fit: FlexFit.loose,
           child: Text(
             imageFile == null ? "No image selected" : "Image selected", // Para evitar overflow
             style: const TextStyle(
@@ -193,7 +241,7 @@ class _ImageInputState extends State<ImageInput> {
         child: ElevatedButton(
           
           onPressed: () async {
-            final result = await _uploadImage.selectImage();
+            final result = await _uploadImage.selectImageWeb();
             if (result != null) {
               setState(() {
                 imageFile = result;
@@ -213,16 +261,12 @@ class _ImageInputState extends State<ImageInput> {
         child: ElevatedButton(
           onPressed: () async {
             if (imageFile == null) return;
-            final result = await _uploadImage.uploadImage(imageFile!);
-            print("Image upload result: $result");
-            if (result != null) {
-              setState(() {
-                widget.controllerUrl.text = result.url;
-                widget.controllerId.text = result.id;
-              });
-            } else {
-              print("Image upload failed");
-            }
+            final result = await _uploadImage.uploadImageWeb(imageFile!);
+            setState(() {
+              widget.controllerUrl.text = result.url;
+              widget.controllerId.text = result.id;
+            });
+          
           },
           child: const Text("Upload Image",
           style: TextStyle(
@@ -230,7 +274,31 @@ class _ImageInputState extends State<ImageInput> {
           ),
           textAlign: TextAlign.center,
           ),
-        ))
+        )),
+        const SizedBox(width: 30),
+        Expanded(child:Column(
+          children: [
+            if (widget.controllerUrl.text.isNotEmpty) 
+            const Text(
+              'Image Preview:',
+              style: TextStyle(
+                fontSize: 9,
+                
+              )
+              ),
+            SizedBox(height: 10),
+            if (widget.controllerUrl.text.isNotEmpty) 
+              Image.network(
+                widget.controllerUrl.text,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+            const SizedBox(height: 10),
+          ],
+        ) )
+        
+        
       ],
     );
 
@@ -248,32 +316,55 @@ class  TaskTypeInput extends StatefulWidget {
 
 
 class _TaskTypeInputState extends State< TaskTypeInput> {
+
+   late Future<Gettasktypedto> _taskTypesFuture;
+
+   @override
+   void initState() {
+     super.initState();
+     _taskTypesFuture = Taskservices().fetchTaskTypes();
+   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Taskservices().fetchTaskTypes(),
+      future: _taskTypesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           final taskTypes = snapshot.data?.list_names ?? [];
           print("Task types: $taskTypes");
           return ListView.builder(
+            shrinkWrap: true,
             itemCount: taskTypes.length,
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              final taskType = taskTypes[index];
-              return ListTile(
-                title: Text(taskType),
-                onTap: () {
-                  widget.controller.add(taskType);
+              return CheckboxListTile(
+                title: Text(taskTypes[index]),
+                value: widget.controller.contains(taskTypes[index]),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value == true) {
+                      widget.controller.add(taskTypes[index]);
+                      print(widget.controller);
+                    } else {
+                      widget.controller.remove(taskTypes[index]);
+                    }
+                  });
                 },
               );
             },
+        
           );
         }
       },
     );
   }
 }
+
+
+
+

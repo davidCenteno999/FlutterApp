@@ -6,9 +6,9 @@ class Gettasktypedto {
     required this.list_names,
   });
 
-  factory Gettasktypedto.fromJson(Map<String, dynamic> json) {
+  factory Gettasktypedto.fromJson(List<dynamic> json) {
     return Gettasktypedto(
-      list_names: List<String>.from(json['list_names']),
+      list_names: List<String>.from(json.map((item) => item.toString())),
     );
   }
 

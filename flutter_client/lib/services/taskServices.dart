@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter_client/models/taskDto/createTaskDto.dart';
 import 'package:flutter_client/models/taskTypeDto/getTaskTypeDto.dart';
 import 'package:flutter_client/services/AuthServices.dart';
 import 'package:http/http.dart' as http;
@@ -15,11 +16,13 @@ class Taskservices {
   Taskservices._internal();
 
   
+  final AuthService _authService = AuthService();
 
-  final String baseUrl = 'http://192.168.100.53:5289/api/TaskType';
+  final String baseUrl = 'https://localhost:7295/api/TaskType';
+  final String taskUrl = 'https://localhost:7295/api/TaskInformation';
   
   Future<Gettasktypedto> fetchTaskTypes() async {
-    /*final userId  = await _authService.getUserId();
+    /*
     if (userId == null) {
       throw Exception('User not logged in');
     }*/
@@ -28,10 +31,13 @@ class Taskservices {
       final response = await http.get(
         Uri.parse(baseUrl)
       );
-      print(response);
+      print(response.body);
       if (response.statusCode == 200) {
-        final data = Gettasktypedto.fromJson(jsonDecode(response.body));
+        final decoded = jsonDecode(response.body);
+        final data = Gettasktypedto.fromJson(decoded);
+        print(data);
         return data;
+
       } else {
         print("Failed to load task types: ${response.statusCode}");
         throw Exception('Failed to load task types: ${response.reasonPhrase}');
@@ -41,5 +47,32 @@ class Taskservices {
     }
 
     
+  }
+
+  Future<bool> createTask(Createtaskdto task) async {
+    final accessToken = await _authService.getAccessToken();
+    if (accessToken == null) {
+      throw Exception('User not logged in');
+    }
+    print(accessToken);
+    try {
+      final response = await http.post(
+        Uri.parse(taskUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(task.toJson()),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return true;
+      } else {
+        print("Failed to create task: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      throw Exception('Failed to create task: $e');
+    }
   }
 }

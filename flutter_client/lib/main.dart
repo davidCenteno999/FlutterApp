@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
 
-      home: const SplashScreen(), // Use Navbar as the home widget
+      home: const Createtask(), // Use Navbar as the home widget
 
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),

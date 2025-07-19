@@ -14,4 +14,15 @@ class Createtaskdto {
     required this.userId,
     required this.taskType,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'imageId': imageId,
+      'imageUrl': imageUrl,
+      'userId': userId,
+      'taskType': taskType,
+    };
+  }
 }

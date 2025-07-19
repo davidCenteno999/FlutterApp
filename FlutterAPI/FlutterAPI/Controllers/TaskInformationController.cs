@@ -1,6 +1,7 @@
 ﻿using FlutterAPI.Entities;
 using FlutterAPI.Models.TaskModel;
 using FlutterAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,8 @@ namespace FlutterAPI.Controllers
     [ApiController]
     public class TaskInformationController(InterfaceTaskInformationService taskInformationService) : ControllerBase
     {
-        [HttpPost("create")]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult<TaskInformation?>> CreateTaskInformationAsync(CreateTaskInformationDto taskInformationDto)
         {
             var taskInformation = await taskInformationService.CreateTaskInformationAsync(taskInformationDto);
