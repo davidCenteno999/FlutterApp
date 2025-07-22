@@ -13,7 +13,7 @@ namespace FlutterAPI.Services
 
         Task<List<GetTaskInformationDto?>> GetTaskInformationByUserIdAsync(Guid userId);
 
-        Task<bool> UpdateTaskInformationAsync(UpdateTaskInformationDto updateTaskInformationDto);
+        Task<bool> UpdateTaskInformationAsync(Guid id,UpdateTaskInformationDto updateTaskInformationDto);
 
         Task<bool> DeleteTaskInformationAsync(Guid id);
 

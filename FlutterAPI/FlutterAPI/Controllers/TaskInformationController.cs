@@ -34,6 +34,18 @@ namespace FlutterAPI.Controllers
             return Ok(taskInformationList);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> UpdateTaskInformation(Guid id, UpdateTaskInformationDto updateTaskInformationDto)
+        {
+            
+            var result = await taskInformationService.UpdateTaskInformationAsync(id, updateTaskInformationDto);
+            if (!result)
+            {
+                return NotFound("Task not found or update failed.");
+            }
+            return Ok(result);
+        }
+
     }
 
 

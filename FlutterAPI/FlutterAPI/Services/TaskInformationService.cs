@@ -137,9 +137,45 @@ namespace FlutterAPI.Services
         }
 
 
-        public Task<bool> UpdateTaskInformationAsync(UpdateTaskInformationDto updateTaskInformationDto)
+        public async Task<bool> UpdateTaskInformationAsync(Guid id,UpdateTaskInformationDto updateTaskInformationDto)
         {
-            throw new NotImplementedException();
+            var existingTask = await context.Tasks
+                .Include(t=> t.TaskTypes)
+                .FirstOrDefaultAsync(t => t.Id == id);
+            if (existingTask == null){
+                return false; // Task not found
+            }
+
+            if (updateTaskInformationDto == null)
+            {
+                return false;
+            }
+            if (updateTaskInformationDto.Title != "")
+                existingTask.Title = updateTaskInformationDto.Title;
+            if (updateTaskInformationDto.Description != "")
+                existingTask.Description = updateTaskInformationDto.Description;
+            if (updateTaskInformationDto.ImageUrl != "")
+                existingTask.ImageUrl = updateTaskInformationDto.ImageUrl;
+            
+            if (updateTaskInformationDto.TaskTypes != null)
+            {
+
+
+                existingTask.TaskTypes.Clear();
+                existingTask.TaskTypes = new List<TaskType>();
+                foreach (var nameType in updateTaskInformationDto.TaskTypes)
+                {
+                    var taskType = await context.TaskTypes.FirstOrDefaultAsync(t => t.Name == nameType);
+                    if (taskType != null)
+                    {
+                        existingTask.TaskTypes.Add(taskType);
+                    }
+                }
+            }
+
+            context.Tasks.Update(existingTask);
+            return await context.SaveChangesAsync() > 0; // Returns true if the task was successfully updated
+
         }
     }
 }
