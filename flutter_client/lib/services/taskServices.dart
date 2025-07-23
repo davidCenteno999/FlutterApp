@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter_client/models/taskDto/createTaskDto.dart';
+import 'package:flutter_client/models/taskDto/getTaskDto.dart';
 import 'package:flutter_client/models/taskTypeDto/getTaskTypeDto.dart';
 import 'package:flutter_client/services/AuthServices.dart';
 import 'package:http/http.dart' as http;
@@ -73,6 +74,27 @@ class Taskservices {
       }
     } catch (e) {
       throw Exception('Failed to create task: $e');
+    }
+  }
+
+  Future<GetTask> fetchTaskById(String taskId) async {
+   
+
+    try {
+      final response = await http.get(
+        Uri.parse('$taskUrl/$taskId'),
+        
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        return GetTask.fromJson(decoded);
+      } else {
+        print("Failed to fetch task: ${response.statusCode}");
+        throw Exception('Failed to fetch task: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch task: $e');
     }
   }
 }

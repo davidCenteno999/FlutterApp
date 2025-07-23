@@ -40,22 +40,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-    future: _authService.getCurrentUser(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (snapshot.hasError) {
-        return Center(child: Text("Error: ${snapshot.error}"));
-      } else {
-        var userProfile = snapshot.data;
-        if (userProfile != null) {
-          usernameCtrl.text = userProfile.username;
-          emailCtrl.text = userProfile.email;
-          rolCtrl.text = userProfile.role;
-        }
-
-        return Scaffold(
+      return Scaffold(
           appBar: Navbar(),
           body: Center(
             child: Row(
@@ -157,8 +142,6 @@ class _ProfileState extends State<Profile> {
         )        
           ])));
       }
-    },
-  );
-  }
+    
 }
  

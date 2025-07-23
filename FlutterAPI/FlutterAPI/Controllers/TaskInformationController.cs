@@ -23,6 +23,17 @@ namespace FlutterAPI.Controllers
             return Ok(taskInformation);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetTaskInformationDto?>> GetTaskInformationByIdAsync(Guid id)
+        {
+            var taskInformation = await taskInformationService.GetTaskInformationByIdAsync(id);
+            if (taskInformation == null)
+            {
+                return NotFound("Task not found.");
+            }
+            return Ok(taskInformation);
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<List<GetTaskInformationDto?>>> GetAllTaskInformationAsync()
         {
@@ -45,6 +56,8 @@ namespace FlutterAPI.Controllers
             }
             return Ok(result);
         }
+
+        
 
     }
 
