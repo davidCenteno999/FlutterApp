@@ -97,4 +97,24 @@ class Taskservices {
       throw Exception('Failed to fetch task: $e');
     }
   }
+
+  Future<List<GetTask>> getTasksByUser(String userId) async {
+   
+    try {
+      final response = await http.get(
+        Uri.parse('$taskUrl/taskUser/$userId'),
+       
+      );
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> decoded = jsonDecode(response.body);
+        return decoded.map((task) => GetTask.fromJson(task)).toList();
+      } else {
+        print("Failed to fetch tasks for user: ${response.statusCode}");
+        throw Exception('Failed to fetch tasks for user: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch tasks for user: $e');
+    }
+  }
 }

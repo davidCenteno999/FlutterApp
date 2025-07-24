@@ -34,6 +34,17 @@ namespace FlutterAPI.Controllers
             return Ok(taskInformation);
         }
 
+        [HttpGet("taskUser/{userId}")]
+        public async Task<ActionResult<List<GetTaskInformationDto?>>> GetTaskInformationByUserIdAsync(Guid userId)
+        {
+            var taskInformationList = await taskInformationService.GetTaskInformationByUserIdAsync(userId);
+            if (taskInformationList == null || !taskInformationList.Any())
+            {
+                return NotFound("No tasks found for this user.");
+            }
+            return Ok(taskInformationList);
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<List<GetTaskInformationDto?>>> GetAllTaskInformationAsync()
         {

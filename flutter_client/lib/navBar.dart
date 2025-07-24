@@ -30,6 +30,7 @@ class _NavbarState extends State<Navbar> {
     return Scaffold(
       
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 147, 113, 189),
         title: const Text("Task Manager"),
         actions: [
           IconButton(

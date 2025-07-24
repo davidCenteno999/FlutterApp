@@ -3,26 +3,26 @@ class GetTask {
   final String title;
   final String description;
   final String imageUrl;
-  final String username;
-  final List<String> taskType;
+  final String userName;
+  final List<String> listTypeTask;
 
   GetTask({
     required this.id,
     required this.title,
     required this.description,
     required this.imageUrl,
-    required this.username,
-    required this.taskType,
+    required this.userName,
+    required this.listTypeTask,
   });
 
   factory GetTask.fromJson(Map<String, dynamic> json) {
     return GetTask(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      imageUrl: json['imageUrl'],
-      username: json['username'],
-      taskType: List<String>.from(json['taskType']),
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
+      userName: json['userName'] ?? '',
+      listTypeTask: List<String>.from(json['listTypeTask'] ?? []),
     );
   }
   

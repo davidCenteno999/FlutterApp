@@ -7,6 +7,7 @@ import 'package:flutter_client/navBar.dart';
 import 'package:flutter_client/services/AuthGuard.dart';
 import 'package:flutter_client/taskPages/createTask.dart';
 import 'package:flutter_client/taskPages/taskHome.dart';
+import 'package:flutter_client/taskPages/updateTask.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Import the Register page
 
@@ -28,12 +29,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        
+        scaffoldBackgroundColor: const Color.fromARGB(255, 84, 52, 124),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
 
-      home: const Createtask(), // Use Navbar as the home widget
+      home:  const Profile(), // Use Navbar as the home widget
 
       routes: {
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -41,9 +42,26 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const Registerpage(),
         '/profile': (context) => const Profile(),
         '/taskHome': (context) => const Taskhome(),
-        '/createTask': (context) => const Createtask()
+        '/createTask': (context) => const Createtask(),
+        
 
       }, // Added routes for login and register
+
+      onGenerateRoute: (settings) {
+        if (settings.name == '/updateTask') {
+          final taskId = settings.arguments as String;
+          if (taskId != null && taskId.isNotEmpty) {
+            return MaterialPageRoute(
+              builder: (context) => UpdateTaskPage(taskId: taskId),
+            );
+          } else {
+            return MaterialPageRoute(
+              builder: (context) => const Text('Error: Task ID not provided'),
+            );
+          }
+        }
+        return null; // Return null for unhandled routes
+      },
 
       // Removed 'const' from routes to match constructors
     );

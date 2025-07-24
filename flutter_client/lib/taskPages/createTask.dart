@@ -51,11 +51,11 @@ class _CreatetaskState extends State<Createtask> {
       appBar: Navbar(),
       body: Center(
         child: Container(
-          width: size.width * 0.7,
-          height: size.height * 0.9,
+          width: size.width * 0.5,
+          height: size.height * 0.7,
           child: Card(
             elevation: 9,
-            color: const Color.fromARGB(255, 152, 105, 240),
+            color: const Color.fromARGB(255, 183, 155, 235),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -231,7 +231,7 @@ class _ImageInputState extends State<ImageInput> {
           child: Text(
             imageFile == null ? "No image selected" : "Image selected", // Para evitar overflow
             style: const TextStyle(
-              fontSize: 5,
+              fontSize: 10,
             ),
           ),
         ),
